@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { 
-  X, 
-  Trash2, 
+import {
+  X,
+  Trash2,
   Save,
   Calendar,
   Link as LinkIcon,
@@ -18,16 +18,16 @@ interface CardEditorProps {
   onClose: () => void;
 }
 
-const colorMap: Record<string, { bg: string; text: string }> = {
-  propColorRed: { bg: 'bg-red-100', text: 'text-red-700' },
-  propColorOrange: { bg: 'bg-orange-100', text: 'text-orange-700' },
-  propColorYellow: { bg: 'bg-yellow-100', text: 'text-yellow-700' },
-  propColorGreen: { bg: 'bg-green-100', text: 'text-green-700' },
-  propColorBlue: { bg: 'bg-blue-100', text: 'text-blue-700' },
-  propColorPurple: { bg: 'bg-purple-100', text: 'text-purple-700' },
-  propColorPink: { bg: 'bg-pink-100', text: 'text-pink-700' },
-  propColorBrown: { bg: 'bg-amber-100', text: 'text-amber-700' },
-  propColorGray: { bg: 'bg-slate-100', text: 'text-slate-700' },
+const colorMap: Record<string, { bg: string; text: string; ring: string }> = {
+  propColorRed: { bg: 'bg-red-500/20', text: 'text-red-300', ring: 'ring-red-500/50' },
+  propColorOrange: { bg: 'bg-orange-500/20', text: 'text-orange-300', ring: 'ring-orange-500/50' },
+  propColorYellow: { bg: 'bg-yellow-500/20', text: 'text-yellow-300', ring: 'ring-yellow-500/50' },
+  propColorGreen: { bg: 'bg-green-500/20', text: 'text-green-300', ring: 'ring-green-500/50' },
+  propColorBlue: { bg: 'bg-blue-500/20', text: 'text-blue-300', ring: 'ring-blue-500/50' },
+  propColorPurple: { bg: 'bg-purple-500/20', text: 'text-purple-300', ring: 'ring-purple-500/50' },
+  propColorPink: { bg: 'bg-pink-500/20', text: 'text-pink-300', ring: 'ring-pink-500/50' },
+  propColorBrown: { bg: 'bg-amber-500/20', text: 'text-amber-300', ring: 'ring-amber-500/50' },
+  propColorGray: { bg: 'bg-slate-500/20', text: 'text-slate-300', ring: 'ring-slate-500/50' },
 };
 
 export default function CardEditor({ card, onClose }: CardEditorProps) {
@@ -69,7 +69,7 @@ export default function CardEditor({ card, onClose }: CardEditorProps) {
   const handlePropertyChange = async (propertyId: string, value: string) => {
     const newProperties = { ...properties, [propertyId]: value };
     setProperties(newProperties);
-    
+
     // Auto-save property changes
     try {
       await updateCard(card.id, { properties: newProperties });
@@ -84,20 +84,20 @@ export default function CardEditor({ card, onClose }: CardEditorProps) {
     switch (property.type) {
       case 'select':
         return (
-          <div className="flex flex-wrap gap-1">
+          <div className="flex flex-wrap gap-2">
             {property.options.map(option => {
               const colors = colorMap[option.color] || colorMap.propColorGray;
               const isSelected = value === option.id;
-              
+
               return (
                 <button
                   key={option.id}
                   onClick={() => handlePropertyChange(property.id, isSelected ? '' : option.id)}
                   className={`
-                    px-2.5 py-1 rounded-md text-sm font-medium transition-all
-                    ${isSelected 
-                      ? `${colors.bg} ${colors.text} ring-2 ring-offset-1 ring-current` 
-                      : 'bg-slate-100 text-slate-500 hover:bg-slate-200'
+                    px-3 py-1.5 rounded-lg text-sm font-medium transition-all
+                    ${isSelected
+                      ? `${colors.bg} ${colors.text} ring-2 ${colors.ring}`
+                      : 'bg-slate-700/50 text-slate-400 hover:bg-slate-700 hover:text-slate-300'
                     }
                   `}
                 >
@@ -117,7 +117,7 @@ export default function CardEditor({ card, onClose }: CardEditorProps) {
               const date = e.target.value ? new Date(e.target.value).getTime().toString() : '';
               handlePropertyChange(property.id, date);
             }}
-            className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-indigo-500"
+            className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700/50 rounded-xl text-sm text-slate-200 focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20"
           />
         );
 
@@ -128,7 +128,7 @@ export default function CardEditor({ card, onClose }: CardEditorProps) {
             value={value}
             onChange={(e) => handlePropertyChange(property.id, e.target.value)}
             placeholder="https://..."
-            className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-indigo-500"
+            className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700/50 rounded-xl text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20"
           />
         );
 
@@ -138,7 +138,7 @@ export default function CardEditor({ card, onClose }: CardEditorProps) {
             type="number"
             value={value}
             onChange={(e) => handlePropertyChange(property.id, e.target.value)}
-            className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-indigo-500"
+            className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700/50 rounded-xl text-sm text-slate-200 focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20"
           />
         );
 
@@ -148,7 +148,7 @@ export default function CardEditor({ card, onClose }: CardEditorProps) {
             type="text"
             value={value}
             onChange={(e) => handlePropertyChange(property.id, e.target.value)}
-            className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-indigo-500"
+            className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700/50 rounded-xl text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20"
           />
         );
     }
@@ -173,7 +173,7 @@ export default function CardEditor({ card, onClose }: CardEditorProps) {
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         onClick={onClose}
-        className="fixed inset-0 bg-black/30 z-40"
+        className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40"
       />
 
       {/* Sidebar */}
@@ -182,26 +182,26 @@ export default function CardEditor({ card, onClose }: CardEditorProps) {
         animate={{ x: 0 }}
         exit={{ x: '100%' }}
         transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-        className="fixed top-0 right-0 w-full max-w-lg h-full bg-white shadow-2xl z-50 flex flex-col"
+        className="fixed top-0 right-0 w-full max-w-lg h-full glass shadow-2xl z-50 flex flex-col border-l border-slate-700/50"
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-slate-200">
-          <div className="flex items-center gap-2">
+        <div className="flex items-center justify-between p-5 border-b border-slate-700/50">
+          <div className="flex items-center gap-3">
             <span className="text-2xl">{card.icon || '📝'}</span>
-            <span className="text-sm text-slate-500">แก้ไขการ์ด</span>
+            <span className="text-sm text-slate-400">แก้ไขการ์ด</span>
           </div>
-          
+
           <div className="flex items-center gap-2">
             <button
               onClick={handleDelete}
-              className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+              className="p-2.5 text-slate-400 hover:text-red-400 hover:bg-red-500/10 rounded-xl transition-colors"
               title="ลบการ์ด"
             >
               <Trash2 className="w-5 h-5" />
             </button>
             <button
               onClick={onClose}
-              className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition-colors"
+              className="p-2.5 text-slate-400 hover:text-white hover:bg-slate-700/50 rounded-xl transition-colors"
             >
               <X className="w-5 h-5" />
             </button>
@@ -209,28 +209,28 @@ export default function CardEditor({ card, onClose }: CardEditorProps) {
         </div>
 
         {/* Content */}
-        <div className="flex-1 overflow-y-auto p-4">
+        <div className="flex-1 overflow-y-auto p-5">
           {/* Title */}
-          <div className="mb-6">
+          <div className="mb-8">
             <input
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               onBlur={handleSave}
-              className="w-full text-xl font-semibold text-slate-800 border-0 border-b-2 border-transparent hover:border-slate-200 focus:border-indigo-500 focus:outline-none pb-2 transition-colors"
+              className="w-full text-xl font-semibold text-white bg-transparent border-0 border-b-2 border-transparent hover:border-slate-600 focus:border-purple-500 focus:outline-none pb-3 transition-colors placeholder-slate-500"
               placeholder="ชื่อการ์ด"
             />
           </div>
 
           {/* Properties */}
-          <div className="space-y-4">
-            <h3 className="text-sm font-medium text-slate-500 uppercase tracking-wider">
+          <div className="space-y-5">
+            <h3 className="text-sm font-medium text-slate-400 uppercase tracking-wider">
               คุณสมบัติ
             </h3>
-            
+
             {currentBoard?.properties.map(property => (
-              <div key={property.id} className="space-y-2">
-                <label className="flex items-center gap-2 text-sm font-medium text-slate-700">
+              <div key={property.id} className="space-y-2.5">
+                <label className="flex items-center gap-2 text-sm font-medium text-slate-300">
                   {getPropertyIcon(property.type)}
                   {property.name}
                 </label>
@@ -240,23 +240,23 @@ export default function CardEditor({ card, onClose }: CardEditorProps) {
           </div>
 
           {/* Content/Notes section */}
-          <div className="mt-8">
-            <h3 className="text-sm font-medium text-slate-500 uppercase tracking-wider mb-3">
+          <div className="mt-10">
+            <h3 className="text-sm font-medium text-slate-400 uppercase tracking-wider mb-4">
               หมายเหตุ
             </h3>
             <textarea
-              className="w-full h-32 px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-indigo-500 resize-none"
+              className="w-full h-36 px-4 py-3 bg-slate-800/50 border border-slate-700/50 rounded-xl text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 resize-none"
               placeholder="เพิ่มหมายเหตุ..."
             />
           </div>
         </div>
 
         {/* Footer */}
-        <div className="p-4 border-t border-slate-200">
+        <div className="p-5 border-t border-slate-700/50">
           <button
             onClick={handleSave}
             disabled={isSaving}
-            className="w-full flex items-center justify-center gap-2 py-2.5 bg-indigo-500 hover:bg-indigo-600 text-white rounded-lg transition-colors disabled:opacity-50"
+            className="w-full flex items-center justify-center gap-2 py-3.5 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-medium rounded-xl transition-all shadow-lg shadow-purple-500/25 disabled:opacity-50"
           >
             <Save className="w-4 h-4" />
             {isSaving ? 'กำลังบันทึก...' : 'บันทึก'}
@@ -266,3 +266,4 @@ export default function CardEditor({ card, onClose }: CardEditorProps) {
     </>
   );
 }
+

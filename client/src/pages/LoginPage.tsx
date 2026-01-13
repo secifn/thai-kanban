@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Mail, Lock, LogIn, Loader2, Sparkles } from 'lucide-react';
+import { Mail, Lock, LogIn, Loader2, LayoutGrid } from 'lucide-react';
 import { useAuthStore } from '../store/authStore';
 
 export default function LoginPage() {
@@ -24,9 +24,9 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
       {/* Animated background */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-500/20 rounded-full blur-[100px] animate-pulse" />
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-indigo-500/20 rounded-full blur-[100px] animate-pulse" style={{ animationDelay: '1s' }} />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-pink-500/10 rounded-full blur-[120px] animate-pulse" style={{ animationDelay: '2s' }} />
+        <div className="absolute -top-40 -right-40 w-96 h-96 bg-purple-500/20 rounded-full blur-[120px] animate-pulse" />
+        <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-indigo-500/20 rounded-full blur-[120px] animate-pulse" style={{ animationDelay: '1s' }} />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-pink-500/10 rounded-full blur-[150px] animate-pulse" style={{ animationDelay: '2s' }} />
       </div>
       
       <motion.div
@@ -35,22 +35,22 @@ export default function LoginPage() {
         transition={{ duration: 0.5, ease: 'easeOut' }}
         className="w-full max-w-md relative z-10"
       >
-        <div className="bg-slate-800/50 backdrop-blur-2xl rounded-3xl shadow-2xl p-8 border border-slate-700/50">
+        <div className="glass rounded-3xl shadow-2xl p-8 border border-slate-700/30">
           {/* Logo */}
-          <div className="text-center mb-8">
+          <div className="text-center mb-10">
             <motion.div
               initial={{ scale: 0, rotate: -180 }}
               animate={{ scale: 1, rotate: 0 }}
               transition={{ type: 'spring', delay: 0.2, stiffness: 200 }}
-              className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 rounded-2xl shadow-lg shadow-purple-500/30 mb-4"
+              className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-purple-500 via-pink-500 to-rose-500 rounded-2xl shadow-xl shadow-purple-500/30 mb-5"
             >
-              <span className="text-4xl">📋</span>
+              <LayoutGrid className="w-10 h-10 text-white" />
             </motion.div>
             <motion.h1 
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
-              className="text-3xl font-bold bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent"
+              className="text-3xl font-semibold text-white mb-2"
             >
               เข้าสู่ระบบ
             </motion.h1>
@@ -58,11 +58,9 @@ export default function LoginPage() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.4 }}
-              className="text-slate-400 mt-2 flex items-center justify-center gap-2"
+              className="text-slate-400"
             >
-              <Sparkles className="w-4 h-4 text-purple-400" />
               Thai Kanban Board
-              <Sparkles className="w-4 h-4 text-pink-400" />
             </motion.p>
           </div>
 
@@ -86,23 +84,22 @@ export default function LoginPage() {
           )}
 
           {/* Form */}
-          <form onSubmit={handleSubmit} className="space-y-5">
+          <form onSubmit={handleSubmit} className="space-y-6">
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.4 }}
             >
-              <label className="block text-sm font-medium text-slate-300 mb-2">
-                อีเมล
-              </label>
               <div className="relative group">
-                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500 group-focus-within:text-indigo-400 transition-colors" />
+                <div className="absolute left-0 top-0 bottom-0 w-12 flex items-center justify-center pointer-events-none">
+                  <Mail className="w-5 h-5 text-slate-500 group-focus-within:text-purple-400 transition-colors" />
+                </div>
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full pl-12 pr-4 py-3.5 bg-slate-900/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all duration-200"
-                  placeholder="your@email.com"
+                  className="w-full pl-12 pr-4 py-4 bg-slate-800/50 border border-slate-700/50 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all duration-200"
+                  placeholder="อีเมล"
                   required
                 />
               </div>
@@ -113,17 +110,16 @@ export default function LoginPage() {
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.5 }}
             >
-              <label className="block text-sm font-medium text-slate-300 mb-2">
-                รหัสผ่าน
-              </label>
               <div className="relative group">
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500 group-focus-within:text-indigo-400 transition-colors" />
+                <div className="absolute left-0 top-0 bottom-0 w-12 flex items-center justify-center pointer-events-none">
+                  <Lock className="w-5 h-5 text-slate-500 group-focus-within:text-purple-400 transition-colors" />
+                </div>
                 <input
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-12 pr-4 py-3.5 bg-slate-900/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all duration-200"
-                  placeholder="••••••••"
+                  className="w-full pl-12 pr-4 py-4 bg-slate-800/50 border border-slate-700/50 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all duration-200"
+                  placeholder="รหัสผ่าน"
                   required
                 />
               </div>
@@ -137,7 +133,7 @@ export default function LoginPage() {
               whileTap={{ scale: 0.98 }}
               type="submit"
               disabled={isLoading}
-              className="w-full py-4 px-4 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 hover:from-indigo-500 hover:via-purple-500 hover:to-pink-500 text-white font-semibold rounded-xl shadow-lg shadow-purple-500/25 transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+              className="w-full py-4 px-4 bg-gradient-to-r from-purple-600 via-pink-600 to-rose-600 hover:from-purple-500 hover:via-pink-500 hover:to-rose-500 text-white font-semibold rounded-xl shadow-lg shadow-purple-500/25 transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
             >
               {isLoading ? (
                 <Loader2 className="w-5 h-5 animate-spin" />
@@ -160,7 +156,7 @@ export default function LoginPage() {
             ยังไม่มีบัญชี?{' '}
             <Link 
               to="/register" 
-              className="text-indigo-400 hover:text-indigo-300 font-medium hover:underline transition-colors"
+              className="text-purple-400 hover:text-purple-300 font-medium hover:underline transition-colors"
             >
               สมัครสมาชิก
             </Link>
@@ -180,3 +176,4 @@ export default function LoginPage() {
     </div>
   );
 }
+

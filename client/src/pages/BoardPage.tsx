@@ -1,10 +1,10 @@
 import { useEffect, useState, useMemo } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  ArrowLeft, 
-  LayoutGrid, 
-  Table, 
+import {
+  ArrowLeft,
+  LayoutGrid,
+  Table,
   Calendar,
   Settings,
   Users,
@@ -20,16 +20,16 @@ import type { Card } from '../types';
 
 export default function BoardPage() {
   const { boardId } = useParams<{ boardId: string }>();
-  const { 
-    currentBoard, 
+  const {
+    currentBoard,
     views,
     currentView,
     setCurrentView,
-    fetchBoard, 
+    fetchBoard,
     createView,
-    isLoading 
+    isLoading
   } = useBoardStore();
-  
+
   const [selectedCard, setSelectedCard] = useState<Card | null>(null);
   const [showViewMenu, setShowViewMenu] = useState(false);
 
@@ -41,8 +41,8 @@ export default function BoardPage() {
 
   const statusPropertyId = useMemo(() => {
     if (!currentBoard) return null;
-    const statusProp = currentBoard.properties.find(p => 
-      p.name.includes('สถานะ') || 
+    const statusProp = currentBoard.properties.find(p =>
+      p.name.includes('สถานะ') ||
       p.name.includes('Status') ||
       p.type === 'select'
     );
@@ -83,30 +83,30 @@ export default function BoardPage() {
 
   if (isLoading || !currentBoard) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50">
-        <Loader2 className="w-8 h-8 text-indigo-500 animate-spin" />
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="w-8 h-8 text-purple-500 animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen">
       {/* Header */}
-      <header className="bg-white border-b border-slate-200 sticky top-0 z-40">
+      <header className="glass border-b border-slate-700/50 sticky top-0 z-40">
         <div className="max-w-full mx-auto px-4 sm:px-6">
           <div className="flex items-center justify-between h-14">
             {/* Left side */}
             <div className="flex items-center gap-3">
               <Link
                 to="/"
-                className="p-2 text-slate-500 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition-colors"
+                className="p-2 text-slate-400 hover:text-white hover:bg-slate-700/50 rounded-lg transition-colors"
               >
                 <ArrowLeft className="w-5 h-5" />
               </Link>
-              
+
               <div className="flex items-center gap-2">
                 <span className="text-2xl">{currentBoard.icon}</span>
-                <h1 className="text-lg font-semibold text-slate-800 truncate max-w-xs">
+                <h1 className="text-lg font-semibold text-white truncate max-w-xs">
                   {currentBoard.title}
                 </h1>
               </div>
@@ -114,10 +114,10 @@ export default function BoardPage() {
 
             {/* Right side */}
             <div className="flex items-center gap-2">
-              <button className="p-2 text-slate-500 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition-colors">
+              <button className="p-2 text-slate-400 hover:text-white hover:bg-slate-700/50 rounded-lg transition-colors">
                 <Users className="w-5 h-5" />
               </button>
-              <button className="p-2 text-slate-500 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition-colors">
+              <button className="p-2 text-slate-400 hover:text-white hover:bg-slate-700/50 rounded-lg transition-colors">
                 <Settings className="w-5 h-5" />
               </button>
             </div>
@@ -131,9 +131,9 @@ export default function BoardPage() {
                 onClick={() => setCurrentView(view)}
                 className={`
                   flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-lg transition-colors
-                  ${currentView?.id === view.id 
-                    ? 'bg-indigo-100 text-indigo-700' 
-                    : 'text-slate-600 hover:bg-slate-100'
+                  ${currentView?.id === view.id
+                    ? 'bg-purple-500/20 text-purple-300'
+                    : 'text-slate-400 hover:bg-slate-700/50 hover:text-slate-200'
                   }
                 `}
               >
@@ -141,42 +141,42 @@ export default function BoardPage() {
                 {view.title}
               </button>
             ))}
-            
+
             {/* Add view button */}
             <div className="relative">
               <button
                 onClick={() => setShowViewMenu(!showViewMenu)}
-                className="flex items-center gap-1 px-2 py-1.5 text-sm text-slate-500 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition-colors"
+                className="flex items-center gap-1 px-2 py-1.5 text-sm text-slate-400 hover:text-white hover:bg-slate-700/50 rounded-lg transition-colors"
               >
                 <Plus className="w-4 h-4" />
                 <ChevronDown className="w-3 h-3" />
               </button>
-              
+
               <AnimatePresence>
                 {showViewMenu && (
                   <motion.div
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 10 }}
-                    className="absolute top-full left-0 mt-1 w-48 bg-white rounded-lg shadow-lg border border-slate-200 py-1 z-10"
+                    className="absolute top-full left-0 mt-1 w-48 bg-slate-800 border border-slate-700 rounded-xl shadow-xl py-2 z-10"
                   >
                     <button
                       onClick={() => handleCreateView('BOARD')}
-                      className="w-full flex items-center gap-2 px-3 py-2 text-sm text-slate-700 hover:bg-slate-50"
+                      className="w-full flex items-center gap-2 px-3 py-2 text-sm text-slate-300 hover:bg-slate-700/50 hover:text-white"
                     >
                       <LayoutGrid className="w-4 h-4" />
                       มุมมอง Kanban
                     </button>
                     <button
                       onClick={() => handleCreateView('TABLE')}
-                      className="w-full flex items-center gap-2 px-3 py-2 text-sm text-slate-700 hover:bg-slate-50"
+                      className="w-full flex items-center gap-2 px-3 py-2 text-sm text-slate-300 hover:bg-slate-700/50 hover:text-white"
                     >
                       <Table className="w-4 h-4" />
                       มุมมองตาราง
                     </button>
                     <button
                       onClick={() => handleCreateView('CALENDAR')}
-                      className="w-full flex items-center gap-2 px-3 py-2 text-sm text-slate-700 hover:bg-slate-50"
+                      className="w-full flex items-center gap-2 px-3 py-2 text-sm text-slate-300 hover:bg-slate-700/50 hover:text-white"
                     >
                       <Calendar className="w-4 h-4" />
                       มุมมองปฏิทิน
@@ -194,16 +194,16 @@ export default function BoardPage() {
         {currentView?.type === 'TABLE' ? (
           <TableView onCardClick={handleCardClick} />
         ) : currentView?.type === 'CALENDAR' ? (
-          <div className="text-center py-20 text-slate-500">
+          <div className="text-center py-20 text-slate-400">
             มุมมองปฏิทินกำลังพัฒนา
           </div>
         ) : statusPropertyId ? (
-          <KanbanBoard 
-            statusPropertyId={statusPropertyId} 
+          <KanbanBoard
+            statusPropertyId={statusPropertyId}
             onCardClick={handleCardClick}
           />
         ) : (
-          <div className="text-center py-20 text-slate-500">
+          <div className="text-center py-20 text-slate-400">
             กรุณาเพิ่ม Property ประเภท "select" เพื่อใช้เป็นสถานะของการ์ด
           </div>
         )}
@@ -212,8 +212,8 @@ export default function BoardPage() {
       {/* Card Editor Sidebar */}
       <AnimatePresence>
         {selectedCard && (
-          <CardEditor 
-            card={selectedCard} 
+          <CardEditor
+            card={selectedCard}
             onClose={handleCloseEditor}
           />
         )}

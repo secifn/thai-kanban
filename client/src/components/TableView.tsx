@@ -9,15 +9,15 @@ interface TableViewProps {
 }
 
 const colorMap: Record<string, { bg: string; text: string }> = {
-  propColorRed: { bg: 'bg-red-100', text: 'text-red-700' },
-  propColorOrange: { bg: 'bg-orange-100', text: 'text-orange-700' },
-  propColorYellow: { bg: 'bg-yellow-100', text: 'text-yellow-700' },
-  propColorGreen: { bg: 'bg-green-100', text: 'text-green-700' },
-  propColorBlue: { bg: 'bg-blue-100', text: 'text-blue-700' },
-  propColorPurple: { bg: 'bg-purple-100', text: 'text-purple-700' },
-  propColorPink: { bg: 'bg-pink-100', text: 'text-pink-700' },
-  propColorBrown: { bg: 'bg-amber-100', text: 'text-amber-700' },
-  propColorGray: { bg: 'bg-slate-100', text: 'text-slate-700' },
+  propColorRed: { bg: 'bg-red-500/20', text: 'text-red-300' },
+  propColorOrange: { bg: 'bg-orange-500/20', text: 'text-orange-300' },
+  propColorYellow: { bg: 'bg-yellow-500/20', text: 'text-yellow-300' },
+  propColorGreen: { bg: 'bg-green-500/20', text: 'text-green-300' },
+  propColorBlue: { bg: 'bg-blue-500/20', text: 'text-blue-300' },
+  propColorPurple: { bg: 'bg-purple-500/20', text: 'text-purple-300' },
+  propColorPink: { bg: 'bg-pink-500/20', text: 'text-pink-300' },
+  propColorBrown: { bg: 'bg-amber-500/20', text: 'text-amber-300' },
+  propColorGray: { bg: 'bg-slate-500/20', text: 'text-slate-300' },
 };
 
 export default function TableView({ onCardClick }: TableViewProps) {
@@ -43,7 +43,7 @@ export default function TableView({ onCardClick }: TableViewProps) {
     if (!property) return '-';
 
     const value = card.properties[propertyId];
-    if (!value) return '-';
+    if (!value) return <span className="text-slate-500">-</span>;
 
     switch (property.type) {
       case 'select': {
@@ -51,7 +51,7 @@ export default function TableView({ onCardClick }: TableViewProps) {
         if (!option) return '-';
         const colors = colorMap[option.color] || colorMap.propColorGray;
         return (
-          <span className={`inline-flex px-2 py-0.5 rounded text-xs font-medium ${colors.bg} ${colors.text}`}>
+          <span className={`inline-flex px-2.5 py-1 rounded-lg text-xs font-medium ${colors.bg} ${colors.text}`}>
             {option.value}
           </span>
         );
@@ -59,20 +59,24 @@ export default function TableView({ onCardClick }: TableViewProps) {
 
       case 'date': {
         const date = new Date(parseInt(value));
-        return date.toLocaleDateString('th-TH', {
-          year: 'numeric',
-          month: 'short',
-          day: 'numeric',
-        });
+        return (
+          <span className="text-slate-300">
+            {date.toLocaleDateString('th-TH', {
+              year: 'numeric',
+              month: 'short',
+              day: 'numeric',
+            })}
+          </span>
+        );
       }
 
       case 'url':
         return (
-          <a 
-            href={value} 
-            target="_blank" 
+          <a
+            href={value}
+            target="_blank"
             rel="noopener noreferrer"
-            className="text-indigo-600 hover:text-indigo-800 underline"
+            className="text-purple-400 hover:text-purple-300 underline"
             onClick={(e) => e.stopPropagation()}
           >
             {new URL(value).hostname}
@@ -80,25 +84,25 @@ export default function TableView({ onCardClick }: TableViewProps) {
         );
 
       default:
-        return value;
+        return <span className="text-slate-300">{value}</span>;
     }
   };
 
   if (!currentBoard) return null;
 
   return (
-    <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
+    <div className="glass rounded-2xl border border-slate-700/50 overflow-hidden">
       <div className="overflow-x-auto">
         <table className="w-full">
           <thead>
-            <tr className="bg-slate-50 border-b border-slate-200">
-              <th className="text-left px-4 py-3 text-sm font-semibold text-slate-600 sticky left-0 bg-slate-50 min-w-[200px]">
+            <tr className="bg-slate-800/50 border-b border-slate-700/50">
+              <th className="text-left px-5 py-4 text-sm font-semibold text-slate-300 sticky left-0 bg-slate-800/80 backdrop-blur-sm min-w-[200px]">
                 ชื่อ
               </th>
               {visibleProperties.map(property => (
-                <th 
+                <th
                   key={property.id}
-                  className="text-left px-4 py-3 text-sm font-semibold text-slate-600 min-w-[150px]"
+                  className="text-left px-5 py-4 text-sm font-semibold text-slate-300 min-w-[150px]"
                 >
                   {property.name}
                 </th>
@@ -113,16 +117,16 @@ export default function TableView({ onCardClick }: TableViewProps) {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.03 }}
                 onClick={() => onCardClick(card)}
-                className="border-b border-slate-100 hover:bg-slate-50 cursor-pointer transition-colors"
+                className="border-b border-slate-700/30 hover:bg-slate-700/30 cursor-pointer transition-colors group"
               >
-                <td className="px-4 py-3 sticky left-0 bg-white group-hover:bg-slate-50">
-                  <div className="flex items-center gap-2">
-                    <span>{card.icon || '📝'}</span>
-                    <span className="font-medium text-slate-800">{card.title}</span>
+                <td className="px-5 py-4 sticky left-0 bg-slate-800/50 backdrop-blur-sm group-hover:bg-slate-700/50">
+                  <div className="flex items-center gap-2.5">
+                    <span className="text-lg">{card.icon || '📝'}</span>
+                    <span className="font-medium text-slate-200">{card.title}</span>
                   </div>
                 </td>
                 {visibleProperties.map(property => (
-                  <td key={property.id} className="px-4 py-3 text-sm text-slate-600">
+                  <td key={property.id} className="px-5 py-4 text-sm">
                     {renderPropertyValue(card, property.id)}
                   </td>
                 ))}
@@ -135,7 +139,7 @@ export default function TableView({ onCardClick }: TableViewProps) {
       {/* Add card row */}
       <button
         onClick={handleAddCard}
-        className="w-full flex items-center gap-2 px-4 py-3 text-sm text-slate-400 hover:text-slate-600 hover:bg-slate-50 transition-colors"
+        className="w-full flex items-center gap-2 px-5 py-4 text-sm text-slate-400 hover:text-white hover:bg-slate-700/30 transition-colors"
       >
         <Plus className="w-4 h-4" />
         เพิ่มการ์ดใหม่
@@ -150,3 +154,4 @@ export default function TableView({ onCardClick }: TableViewProps) {
     </div>
   );
 }
+

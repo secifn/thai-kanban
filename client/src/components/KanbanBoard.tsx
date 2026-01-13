@@ -47,7 +47,7 @@ export default function KanbanBoard({ statusPropertyId, onCardClick }: KanbanBoa
 
   const columns = useMemo(() => {
     if (!statusProperty) return [];
-    
+
     return [
       ...statusProperty.options.map(opt => ({
         id: opt.id,
@@ -60,7 +60,7 @@ export default function KanbanBoard({ statusPropertyId, onCardClick }: KanbanBoa
 
   const cardsByColumn = useMemo(() => {
     const map = new Map<string, Card[]>();
-    
+
     columns.forEach(col => {
       map.set(col.id, []);
     });
@@ -95,7 +95,7 @@ export default function KanbanBoard({ statusPropertyId, onCardClick }: KanbanBoa
 
     // Get the column ID from the over element
     let overColumnId: string | null = null;
-    
+
     // Check if we're over a card or a column
     const overCard = cards.find(c => c.id === over.id);
     if (overCard) {
@@ -115,11 +115,11 @@ export default function KanbanBoard({ statusPropertyId, onCardClick }: KanbanBoa
       } else {
         newProperties[statusPropertyId] = overColumnId;
       }
-      
+
       // Optimistic update
       useBoardStore.setState(state => ({
-        cards: state.cards.map(c => 
-          c.id === activeCard.id 
+        cards: state.cards.map(c =>
+          c.id === activeCard.id
             ? { ...c, properties: newProperties }
             : c
         ),
@@ -138,7 +138,7 @@ export default function KanbanBoard({ statusPropertyId, onCardClick }: KanbanBoa
     // Calculate new order
     let overColumnId: string;
     const overCard = cards.find(c => c.id === over.id);
-    
+
     if (overCard) {
       overColumnId = overCard.properties[statusPropertyId] || '_none';
     } else {
@@ -146,7 +146,7 @@ export default function KanbanBoard({ statusPropertyId, onCardClick }: KanbanBoa
     }
 
     const columnCards = cardsByColumn.get(overColumnId) || [];
-    
+
     let newOrder: number;
     if (overCard) {
       const overIndex = columnCards.findIndex(c => c.id === over.id);
@@ -165,7 +165,7 @@ export default function KanbanBoard({ statusPropertyId, onCardClick }: KanbanBoa
 
     // Update all affected cards
     const updatedCards: Array<{ id: string; order: number; properties?: Record<string, string> }> = [];
-    
+
     // Add the moved card
     updatedCards.push({
       id: activeCard.id,
@@ -195,7 +195,7 @@ export default function KanbanBoard({ statusPropertyId, onCardClick }: KanbanBoa
     if (columnId !== '_none') {
       properties[statusPropertyId] = columnId;
     }
-    
+
     try {
       const card = await createCard({
         title: 'การ์ดใหม่',
@@ -208,11 +208,11 @@ export default function KanbanBoard({ statusPropertyId, onCardClick }: KanbanBoa
   };
 
   const getCardColor = (card: Card): string => {
-    const priorityProp = currentBoard?.properties.find(p => 
+    const priorityProp = currentBoard?.properties.find(p =>
       p.name.includes('ความเร่งด่วน') || p.name.includes('Priority')
     );
     if (!priorityProp) return '';
-    
+
     const priorityValue = card.properties[priorityProp.id];
     const option = priorityProp.options.find(o => o.id === priorityValue);
     return option?.color || '';
@@ -237,7 +237,7 @@ export default function KanbanBoard({ statusPropertyId, onCardClick }: KanbanBoa
       <div className="flex gap-4 overflow-x-auto pb-4 min-h-[calc(100vh-220px)]">
         {columns.map(column => {
           const columnCards = cardsByColumn.get(column.id) || [];
-          
+
           return (
             <motion.div
               key={column.id}
@@ -266,10 +266,10 @@ export default function KanbanBoard({ statusPropertyId, onCardClick }: KanbanBoa
                     ))}
                   </AnimatePresence>
                 </SortableContext>
-                
+
                 <button
                   onClick={() => handleAddCard(column.id)}
-                  className="w-full mt-2 py-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition-colors flex items-center justify-center gap-1 text-sm"
+                  className="w-full mt-3 py-2.5 text-slate-400 hover:text-white hover:bg-slate-700/50 rounded-xl transition-colors flex items-center justify-center gap-1.5 text-sm border border-transparent hover:border-slate-600/50"
                 >
                   <Plus className="w-4 h-4" />
                   เพิ่มการ์ด
