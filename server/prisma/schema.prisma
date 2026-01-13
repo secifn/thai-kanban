@@ -1,0 +1,102 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  name      String
+  avatar    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  boardMembers  BoardMember[]
+  createdCards  Card[]        @relation("CardCreator")
+  createdBoards Board[]       @relation("BoardCreator")
+}
+
+model Board {
+  id              String   @id @default(uuid())
+  title           String
+  description     String?
+  icon            String?
+  showDescription Boolean  @default(false)
+  properties      String   @default("[]")
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  createdById String
+  createdBy   User   @relation("BoardCreator", fields: [createdById], references: [id])
+
+  members BoardMember[]
+  cards   Card[]
+  views   View[]
+  files   File[]
+}
+
+model BoardMember {
+  id        String   @id @default(uuid())
+  role      String   @default("EDITOR") // ADMIN, EDITOR, VIEWER
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userId  String
+  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  boardId String
+  board   Board  @relation(fields: [boardId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, boardId])
+}
+
+model Card {
+  id          String   @id @default(uuid())
+  title       String
+  content     String?
+  properties  String   @default("{}")
+  icon        String?
+  order       Int      @default(0)
+  parentId    String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  boardId     String
+  board       Board  @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  createdById String
+  createdBy   User   @relation("CardCreator", fields: [createdById], references: [id])
+}
+
+model View {
+  id                 String   @id @default(uuid())
+  title              String
+  type               String   @default("BOARD") // BOARD, TABLE, CALENDAR, GALLERY
+  parentId           String?
+  filter             String   @default("{}")
+  sortOptions        String   @default("[]")
+  visiblePropertyIds String   @default("[]")
+  columnWidths       String   @default("{}")
+  kanbanCalculations String   @default("{}")
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  boardId String
+  board   Board  @relation(fields: [boardId], references: [id], onDelete: Cascade)
+}
+
+model File {
+  id        String   @id @default(uuid())
+  filename  String
+  mimetype  String
+  size      Int
+  path      String
+  createdAt DateTime @default(now())
+
+  boardId String
+  board   Board  @relation(fields: [boardId], references: [id], onDelete: Cascade)
+}

@@ -1,0 +1,46 @@
+# Development docker-compose with hot reload
+services:
+  # Frontend - React App with hot reload
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile.dev
+    container_name: thai-kanban-client-dev
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./client:/app
+      - /app/node_modules
+    environment:
+      - VITE_API_URL=http://localhost:3001
+    depends_on:
+      - server
+    networks:
+      - thai-kanban-network
+
+  # Backend - Node.js API with hot reload
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile.dev
+    container_name: thai-kanban-server-dev
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./server:/app
+      - /app/node_modules
+      - server-data:/app/prisma
+    environment:
+      - NODE_ENV=development
+      - DATABASE_URL=file:/app/prisma/dev.db
+      - JWT_SECRET=dev-secret-key
+      - PORT=3001
+    networks:
+      - thai-kanban-network
+
+networks:
+  thai-kanban-network:
+    driver: bridge
+
+volumes:
+  server-data:

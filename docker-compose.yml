@@ -1,0 +1,51 @@
+services:
+  # Frontend - React App
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: thai-kanban-client
+    ports:
+      - "8080:80"
+    depends_on:
+      server:
+        condition: service_healthy
+    networks:
+      - thai-kanban-network
+    restart: unless-stopped
+
+  # Backend - Node.js API
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: thai-kanban-server
+    ports:
+      - "3002:3001"
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=file:/app/data/thai-kanban.db
+      - JWT_SECRET=${JWT_SECRET:-your-super-secret-jwt-key-change-in-production}
+      - PORT=3001
+    volumes:
+      - server-data:/app/data
+      - server-uploads:/app/uploads
+    networks:
+      - thai-kanban-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3001/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+networks:
+  thai-kanban-network:
+    driver: bridge
+
+volumes:
+  server-data:
+    name: thai-kanban-data
+  server-uploads:
+    name: thai-kanban-uploads
